@@ -6,5 +6,5 @@ Folders description:
 BBCNewsClassification : Jupyter Notebook related to the solutions for the BBC news classification problem (http://mlg.ucd.ie/datasets/bbc.html)
 
 
-TextExtractionClassification : Jupyter Notebook related to extractions problems from xml data related to news. 
+TextExtractionClassification : Jupyter Notebook related to extraction problems from an xml data related to news. 
 
