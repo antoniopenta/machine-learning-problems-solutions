@@ -3,4 +3,8 @@ This repository contains  Jupyter notebooks or scripts describing solutions to m
 
 Folders description: 
 
-BBC : Jupyter Notebook related to the solutions for the BBC news classification problem (http://mlg.ucd.ie/datasets/bbc.html)
+BBCNewsClassification : Jupyter Notebook related to the solutions for the BBC news classification problem (http://mlg.ucd.ie/datasets/bbc.html)
+
+
+TextExtractionClassification : Jupyter Notebook related to extractions problems from xml data related to news. 
+
