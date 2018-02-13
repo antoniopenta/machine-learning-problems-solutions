@@ -8,3 +8,5 @@ BBCNewsClassification : Jupyter Notebook related to the solutions for the BBC ne
 
 TextExtractionClassification : Jupyter Notebook related to extraction problems from an xml data related to news. 
 
+
+SentimentClassification : Jupyter Notebook related to how to classify sentiment for each setence exploring structural linguistic patterns learned on a different datataset (transfer learning approach)
