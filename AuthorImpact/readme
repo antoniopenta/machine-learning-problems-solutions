@@ -1,0 +1,17 @@
+
+Information Extraction from DBLP dataset
+
+Folders:
+    data: it contains the data used for the analysis
+    doc: it contains the query described in the report
+    env: it contains the yml with the description of the conda env used for the project
+    excel: it contains the plot of the data used for the Topic Coherence Analysis
+    functions: it contains python functions used across multiple scripts
+    scripts: it contains all the scripts
+    sql: it contains all the sql file to generate the schema for the database used in the project.
+    dump_database : it contains the dump of the database.
+
+
+Note:
+The scripts influence_computation.py requires the connections with the database,
+where it can retrieve relevant data for the analysis

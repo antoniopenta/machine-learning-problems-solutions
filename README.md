@@ -10,3 +10,6 @@ TextExtractionClassification : Jupyter Notebook related to extraction problems f
 
 
 SentimentClassification : Jupyter Notebook related to how to classify sentiment for each setence exploring structural linguistic patterns learned on a different datataset (transfer learning approach)
+
+
+AuthorImpact: Python project develped with the goal to determine the most cited authors, their topics of interest, their prominent publishers, their impact on fellow authors, and their influence on their field of research using the Proximity DBLP database available at https://kdl.cs.umass.edu/display/public/DBLP.

@@ -1,0 +1,161 @@
+--------------------------------------------------------------
+create table dblp.random_author_of as select * from dblp.author_of order by random() limit 5
+select a.id as id_author,a.name as name, p.id as id_paper,p.name as title
+from dblp.author as a ,dblp.random_author_of as l, dblp.paper as p
+where a.id=l.id_l and l.id_r=p.id
+--------------------------------------------------------------
+
+create table dblp.random_cites as select * from dblp.cites order by random() limit 5;
+
+select p1.id as id_paper1,p1.name as title_paper_1, p2.id as id_paper2,p2.name as title_paper_2 from dblp.paper as p1 ,dblp.random_cites as l ,dblp.paper as p2 where p1.id=l.id_l and l.id_r=p2.id
+
+--------------------------------------------------------------
+
+create table dblp.number_citation as select id_r as id,count(*) as number_citations from dblp.cites group by id_r order by number_citations desc
+
+
+create table dblp.author_citation as select  a.id as id_author, a.name as name, c.id as id_paper, c.number_citations as number_citations
+
+from dblp.author as a, dblp.author_of as l, dblp.number_citation as c where a.id=l.id_l and l.id_r=c.id  order by number_citations desc
+
+
+select id_author as id_author ,name as name_author, sum(number_citations) as total_number_citations from  dblp.author_citation  group by (id_author,name) order by total_number_citations desc limit 50;
+
+
+--------------------------------------------------------------
+select top.id_author as id_author, top.name_author as name_author, p.name as name_paper
+from dblp.top_authors as top,dblp.author_of as l, dblp.paper as p
+where top.id_author=l.id_l and l.id_r=p.id
+
+--------------------------------------------------------------
+
+select count(*)
+from dblp.book as j left join dblp.publisher as p on j.id_r=p.id where p.name is  not null
+
+select count(*)
+from dblp.book as j left join dblp.publisher as p on j.id_r=p.id where p.name is  null
+
+select count(*)
+from dblp.proceedings as j left join dblp.publisher as p on j.id_r=p.id where p.name is not null
+
+select count(*)
+from dblp.proceedings as j left join dblp.publisher as p on j.id_r=p.id where p.name is  null
+
+select count(*)
+from dblp.journal as j left join dblp.publisher as p on j.id_r=p.id where p.name is  not null
+
+select count(*)
+from dblp.journal as j left join dblp.publisher as p on j.id_r=p.id where p.name is  null
+
+--------------------------------------------------------------
+
+
+create table dblp.paper_publisher as (select proc.id_l as id_paper ,p.name as name_publisher
+from dblp.proceedings as proc,dblp.publisher as p where proc.id_r=p.id
+union
+select book.id_l as id_paper ,p.name as name_publisher
+from dblp.book as book,dblp.publisher as p where book.id_r=p.id
+union
+select journal.id_l as id_paper, p.name as name_publisher
+from dblp.journal as journal,dblp.publisher as p where journal.id_r=p.id)
+
+--------------------------------------------------------------
+
+select top.name_author,p.name_publisher,count(*) as count
+from dblp.top_authors as top, dblp.author_of as l,dblp.paper_publisher as p
+where top.id_author=l.id_l and l.id_r=p.id_paper group by(top.name_author,p.name_publisher) having count(*)>1 order by top.name_author,count desc
+
+--------------------------------------------------------------
+
+select a1.id_l as author_1, a1.id_r as paper_1,a2.id_l as author_2, a2.id_r as paper_2
+from dblp.author_of as a1, dblp.author_of as a2
+where a1.id_r=a2.id_r and a1.id_l<>a2.id_l
+------------------------------------------------------------------
+
+select a1.id_l as top_author,a2.id_l as fellow_author, a1.id_r as id_paper
+from dblp.author_of as a1, dblp.author_of as a2
+where a1.id_r=a2.id_r and a1.id_l<>a2.id_l and a1.id_l in (select id_author from dblp.top_authors)
+
+
+create table dblp.fellow_top_author_1 as select a1.id_l as top_author,a2.id_l as fellow_author, a1.id_r as id_paper
+from dblp.author_of as a1, dblp.author_of as a2
+where a1.id_r=a2.id_r and a1.id_l<>a2.id_l and a1.id_l in (select id_author from dblp.top_authors)
+
+create table dblp.fellow_top_author_2 as select f.top_author as top_author_id,a.name as top_author_name,f.fellow_author as fellow_author_id, f.id_paper as id_paper
+from dblp.fellow_top_author_1 as f, dblp.author as a
+where f.top_author=a.id
+
+create table dblp.fellow_top_author_3 as
+select f.top_author_id,f.top_author_name,f.fellow_author_id,a.name as fellow_author_name ,f.id_paper as id_paper
+from dblp.fellow_top_author_2 as f, dblp.author as a
+where f.fellow_author_id=a.id
+
+
+create table dblp.author_total_citations as select id_author as id_author ,name as name_author, sum(number_citations) as total_number_citations
+from  dblp.author_citation
+group by (id_author,name);
+
+
+create table dblp.fellow_top_author_4 as
+select f.top_author_id,f.top_author_name,a.total_number_citations as citations_top_author,f.fellow_author_id,f.fellow_author_name ,f.id_paper
+from dblp.fellow_top_author_3 as f, dblp.author_total_citations as a
+where f.top_author_id=a.id_author
+
+
+
+create table dblp.fellow_top_author_5 as
+select f.top_author_id,f.top_author_name,f.citations_top_author,f.fellow_author_id,f.fellow_author_name,a.total_number_citations as citations_fellow_author,f.id_paper
+from dblp.fellow_top_author_4 as f, dblp.author_total_citations as a
+where f.fellow_author_id=a.id_author
+
+
+create table dblp.fellow_top_author_6 as
+select f.top_author_id,f.top_author_name,f.citations_top_author,f.fellow_author_id,f.fellow_author_name,f.citations_fellow_author,f.id_paper,c.number_citations as paper_citations
+from dblp.fellow_top_author_5 as f, dblp.number_citation as c
+where f.id_paper=c.id
+
+
+select f.top_author_id,f.top_author_name,f.citations_top_author,f.fellow_author_id,f.fellow_author_name,f.citations_fellow_author,f.id_paper,c.number_citations as paper_citations
+from dblp.fellow_top_author_5 as f, dblp.number_citation as c
+where f.id_paper=c.id and f.citations_top_author<c.number_citations or f.citations_fellow_author<c.number_citations
+
+----------------------------------------------------
+
+select * from dblp.top_authors
+
+select * from dblp.author_total_citations
+
+select a1.id as author_id,a1.name as author_name, a2.id as top_author, a2.name as top_author_name,count(*) as number_citation
+from dblp.author as a1, dblp.author_of as a1f, dblp.cites as c ,dblp.author_of as a2f, dblp.author as a2
+where
+a1.id=a1f.id_l
+and
+a1f.id_r=c.id_l
+and
+c.id_r=a2f.id_r
+and
+a2.id=a2f.id_l
+and
+a2.id in (select id_author from dblp.top_authors)
+group by (a1.id,a1.name, a2.id, a2.name)
+
+----------------------------------------------------
+
+create table dblp.paper_citing_top_author  as select p.id as id_paper, p.name as name_paper,top.id_author as id_top_author, top.name_author as top_name_author
+from dblp.paper as p, dblp.cites as c, dblp.author_of as aof, dblp.top_authors as top
+where
+p.id=c.id_l
+and
+aof.id_r=c.id_r
+and
+aof.id_l=top.id_author and p.id not in (select aof2.id_r from dblp.author_of as aof2, dblp.top_authors as top2 where aof2.id_l=top2.id_author)
+
+select distinct id_paper, name_paper from dblp.paper_citing_top_author
+
+----------------------------------------------------
+
+
+
+
+
+
