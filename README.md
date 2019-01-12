@@ -13,3 +13,17 @@ SentimentClassification : Jupyter Notebook related to how to classify sentiment 
 
 
 AuthorImpact: Python project develped with the goal to determine the most cited authors, their topics of interest, their prominent publishers, their impact on fellow authors, and their influence on their field of research using the Proximity DBLP database available at https://kdl.cs.umass.edu/display/public/DBLP.
+
+
+
+## Donations
+
+![AVSI](https://i.imgur.com/oRnsKLL.jpg)
+
+
+- **If you found this code useful, please condider to make a donation to [AVSI](https://www.avsi.org/en/)**
+    - https://www.avsi.org/en/country/
+    - http://www.avsi-usa.org/donate.html
+    - https://www.avsi.org/it/donation/
+
+Many thanks!
